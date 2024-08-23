@@ -49,16 +49,16 @@ st.title("Black-Scholes Option Pricing")
 col1, col2 = st.columns(2)
 
 with st.sidebar:
-    st.title("📊 Black-Scholes Model")
+    st.title("📈 Black-Scholes Model")
     st.write("`Created by:`")
     linkedin_url = "https://www.linkedin.com/in/arthur-villela"
     st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Arthur Villela`</a>', unsafe_allow_html=True)
 
-    cap = st.sidebar.number_input("Current Asset Price (S)", value=80.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
-    sp = st.sidebar.number_input("Strike (K)", value=100.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+    cap = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+    sp = st.sidebar.number_input("Strike (K)", value=70.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
     ty = st.sidebar.number_input("Years to Maturity (T)", value=1.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.4f")
-    vol = st.sidebar.number_input("Volatility (σ)", value=0.20, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
-    rfir = st.sidebar.number_input("Risk-Free Interest Rate (r)", value=0.05, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+    vol = st.sidebar.number_input("Volatility (σ)", value=0.30, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+    rfir = st.sidebar.number_input("Risk-Free Interest Rate (r)", value=0.15, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
 
     st.markdown("---")
     calculate_btn = st.button('Heatmap Parameters')
@@ -73,10 +73,12 @@ with st.sidebar:
 def print_value(S, K, r, T, sigma):
     with col1:
         st.subheader("Call Value")
-        st.title(f":green-background[{round(call_value(S, K, r, T, sigma), 2)}]")
+        st.title(f":blue-background[{round(call_value(S, K, r, T, sigma), 2)}]")
 
     with col2:
         st.subheader("Put Value")
-        st.title(f":red-background[{round(put_value(S, K, r, T, sigma), 2)}]")
+        st.title(f":green-background[{round(put_value(S, K, r, T, sigma), 2)}]")
 
 print_value(cap, sp, rfir, ty, vol)
+
+st.title("Options Heatmap")
