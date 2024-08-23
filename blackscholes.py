@@ -1,6 +1,8 @@
 import streamlit as st
 import numpy as np
 from scipy.stats import norm
+import seaborn as sn
+import matplotlib.pyplot as plt
 
 def d1(S, K, r, T, sigma):
     return (np.log(S/K)+T*(r+np.pow(sigma, 2)/2))/(sigma*np.sqrt(T))
@@ -64,3 +66,23 @@ with st.sidebar:
     spot_max = st.number_input('Max Spot Price', min_value=0.01, value=current_price*1.2, step=0.01)
     vol_min = st.slider('Min Volatility for Heatmap', min_value=0.01, max_value=1.0, value=volatility*0.5, step=0.01)
     vol_max = st.slider('Max Volatility for Heatmap', min_value=0.01, max_value=1.0, value=volatility*1.5, step=0.01)
+
+    spot_range = np.linspace(spot_min, spot_max, 10)
+    vol_range = np.linspace(vol_min, vol_max, 10)
+
+def print_value(S, K, r, T, sigma):
+    with col1:
+        st.subheader("Call Value")
+        st.title(f":green-background[{round(call_value(S, K, r, T, sigma), 2)}]")
+
+    with col2:
+        st.subheader("Put Value")
+        st.title(f":red-background[{round(put_value(S, K, r, T, sigma), 2)}]")
+
+cap = st.sidebar.number_input("Current Asset Price", value=80.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+sp = st.sidebar.number_input("Strike Price", value=100.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+ty = st.sidebar.number_input("Time to Maturity", value=1.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.4f")
+vol = st.sidebar.number_input("Volatility", value=0.20, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+rfir = st.sidebar.number_input("Risk-Free Interest rate", value=0.05, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+
+print_value(cap, sp, rfir, ty, vol)
