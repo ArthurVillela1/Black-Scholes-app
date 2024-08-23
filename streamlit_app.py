@@ -60,16 +60,6 @@ with st.sidebar:
     vol = st.sidebar.number_input("Volatility (σ)", value=0.30, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
     rfir = st.sidebar.number_input("Risk-Free Interest Rate (r)", value=0.15, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
 
-    st.markdown("---")
-    calculate_btn = st.button('Heatmap Parameters')
-    spot_min = st.number_input('Min Spot Price', min_value=0.01, value=cap*0.8, step=0.01)
-    spot_max = st.number_input('Max Spot Price', min_value=0.01, value=cap*1.2, step=0.01)
-    vol_min = st.slider('Min Volatility for Heatmap', min_value=0.01, max_value=1.0, value=vol*0.5, step=0.01)
-    vol_max = st.slider('Max Volatility for Heatmap', min_value=0.01, max_value=1.0, value=vol*1.5, step=0.01)
-
-    spot_range = np.linspace(spot_min, spot_max, 10)
-    vol_range = np.linspace(vol_min, vol_max, 10)
-
 def print_value(S, K, r, T, sigma):
     with col1:
         st.subheader("Call Value")
@@ -82,3 +72,52 @@ def print_value(S, K, r, T, sigma):
 print_value(cap, sp, rfir, ty, vol)
 
 st.title("Options Heatmap")
+
+
+col1, col2 = st.columns(2)
+
+def heat_map(col, row, title):
+    plt.figure(figsize=(10,10))
+    sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="flare", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
+    plt.xlabel("Asset Price")
+    plt.ylabel("volatility")
+    st.pyplot(plt)
+    plt.close(None)
+
+st.sidebar.write("--------------------------")
+st.sidebar.subheader("Heatmap Parameters")
+min_vol = st.sidebar.slider("Min volatility", 0.01, 1.00, vol*0.5)
+max_vol = st.sidebar.slider("Max Volatility", 0.01, 1.00, vol*1.5)
+min_price = st.sidebar.number_input("Min Price", value=cap*0.8, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+max_price = st.sidebar.number_input("Max Price", value=cap*1.2, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+
+#creating the values to multiply for the heatmap
+rows = [(min_vol + i*(max_vol-min_vol)/9) for i in range(0, 10)] #volatility (y-axis)
+columns = [(min_price + i*(max_price-min_price)/9) for i in range(0, 10)] #spot price (x-axis)
+
+#printing out the x-axis and y-axis values for the heatmap
+rows_print = [round((min_vol + i*(max_vol-min_vol)/9), 2) for i in range(0, 10)]
+columns_print = [round((min_price + i*(max_price-min_price)/9), 2) for i in range(0, 10)]
+
+#creating the 2d matrix's for the heat maps
+data_call = []
+data_put = []
+for i in range(len(rows)):
+    data_call_row = []
+    data_put_row = []
+    for j in range(len(columns)):
+        call_val = call_value(columns[j], sp, rfir, ty, rows[i])
+        put_val = put_value(columns[j], sp, rfir, ty, rows[i])
+        data_call_row.append(call_val)
+        data_put_row.append(put_val)
+    data_call.append(data_call_row)
+    data_put.append(data_put_row)
+
+#outputting the heatmaps to the screen
+with col1:
+    st.subheader("Call")  
+    heat_map(columns_print, rows_print, "Call")
+
+with col2:
+    st.subheader("Put")  
+    heat_map(columns_print, rows_print, "Put")
