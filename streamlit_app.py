@@ -8,7 +8,7 @@ def d1(S, K, r, T, sigma):
     return (np.log(S/K)+T*(r+np.pow(sigma, 2)/2))/(sigma*np.sqrt(T))
 
 def d2(S, K, r, T, sigma):
-    return d1(S, K, r, T, sigma) - vol*np.sqrt(T)
+    return d1(S, K, r, T, sigma) - sigma*np.sqrt(T)
 
 def call_value(S, K, r, T, sigma):
     d1_val = d1(S, K, r, T, sigma)
@@ -78,9 +78,9 @@ col1, col2 = st.columns(2)
 def heat_map(col, row, title):
     plt.figure(figsize=(10,10))
     if title == "Call":
-        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="flare", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
+        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="flare", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8}, linewidths=.2)
     else:
-        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="flare", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
+        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="flare", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8}, linewidths=.2)
     plt.xlabel("Asset Price")
     plt.ylabel("volatility")
     st.pyplot(plt)
