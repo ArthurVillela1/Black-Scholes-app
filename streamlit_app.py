@@ -27,22 +27,22 @@ def delta(option_type, S, K, r, T, sigma):
         return norm.cdf(d1(S, K, r, T, sigma))-1
 
 def gamma(S, K, r, T, sigma):
-    return norm.cdf(d1(S, K, r, T, sigma))/S*sigma*sqrt(T)
-
-def vega(S, K, r, T, sigma):
-    return S*sqrt(T)*norm.cdf(d1(S, K, r, T, sigma))
+    return norm.cdf(d1(S, K, r, T, sigma))/S*sigma*np.sqrt(T)
 
 def theta(option_type, S, K, r, T, sigma):
     if option_type == "call":
-        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*sqrt(T)-r*K*exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
+        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)-r*K*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
     elif option_type == "put":
-        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*sqrt(T)+r*K*exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
+        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)+r*K*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
+
+def vega(S, K, r, T, sigma):
+    return S*np.sqrt(T)*norm.cdf(d1(S, K, r, T, sigma))
 
 def rho(option_type, S, K, r, T, sigma):
     if option_type == "call":
-        return K*T*exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
+        return K*T*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
     elif option_type == "put":
-        return -K*T*exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
+        return -K*T*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
 
 st.set_page_config(layout="wide")
 st.title("Black-Scholes Option Pricing")
@@ -72,7 +72,6 @@ def print_value(S, K, r, T, sigma):
 print_value(cap, sp, rfir, ty, vol)
 
 st.title("Options Heatmap")
-
 
 col1, col2 = st.columns(2)
 
@@ -115,9 +114,31 @@ for i in range(len(rows)):
 
 #outputting the heatmaps to the screen
 with col1:
-    st.subheader("Call")  
+    st.header("Call")  
     heat_map(columns_print, rows_print, "Call")
 
 with col2:
-    st.subheader("Put")  
+    st.header("Put")  
     heat_map(columns_print, rows_print, "Put")
+
+st.title("Greeks")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.header("Call")  
+    st.subheader(f"**Delta:**:blue-background[{round(delta('call',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Gamma:**:blue-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Theta:**:blue-background[{round(theta('call',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Vega:**:blue-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Rho:**:blue-background[{round(rho('call', cap, sp, rfir, ty, vol), 3)}]")
+
+with col2:
+    st.header("Put")  
+    st.subheader(f"**Delta:**:green-background[{round(delta('put',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Gamma:**:green-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Theta:**:green-background[{round(theta('put',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Vega:**:green-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Rho:**:green-background[{round(rho('put', cap, sp, rfir, ty, vol), 3)}]")
+
+    
