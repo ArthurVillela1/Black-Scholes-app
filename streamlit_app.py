@@ -85,6 +85,9 @@ def heat_map(col, row, title):
         sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="crest", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
     plt.xlabel("Asset Price")
     plt.ylabel("Volatility")
+
+    plt.tight_layout(pad=0)
+
     st.pyplot(plt)
     plt.close(None)
 
@@ -126,16 +129,16 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.header("Call")  
-    st.subheader(f"**Delta:**:blue-background[{round(delta('call',cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Gamma:**:blue-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Theta:**:blue-background[{round(theta('call',cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Vega:**:blue-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Rho:**:blue-background[{round(rho('call', cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Delta (∆):**:blue-background[{round(delta('call',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Gamma (Γ):**:blue-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Theta (Θ):**:blue-background[{round(theta('call',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Vega (ν):**:blue-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Rho (ρ):**:blue-background[{round(rho('call', cap, sp, rfir, ty, vol), 3)}]")
 
 with col2:
     st.header("Put")  
-    st.subheader(f"**Delta:**:green-background[{round(delta('put',cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Gamma:**:green-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Theta:**:green-background[{round(theta('put',cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Vega:**:green-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
-    st.subheader(f"**Rho:**:green-background[{round(rho('put', cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Delta (∆):**:green-background[{round(delta('put',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Gamma (Γ):**:green-background[{round(gamma(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Theta (Θ):**:green-background[{round(theta('put',cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Vega (ν):**:green-background[{round(vega(cap, sp, rfir, ty, vol), 3)}]")
+    st.subheader(f"**Rho (ρ):**:green-background[{round(rho('put', cap, sp, rfir, ty, vol), 3)}]")
