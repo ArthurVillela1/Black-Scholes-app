@@ -13,12 +13,14 @@ def d2(S, K, r, T, sigma):
 def call_value(S, K, r, T, sigma):
     d1_val = d1(S, K, r, T, sigma)
     d2_val = d2(S, K, r, T, sigma)
-    return S*norm.cdf(d1_val)-K*np.exp(-r*T)*norm.cdf(d2_val)
+    BS_call = S*norm.cdf(d1_val)-K*np.exp(-r*T)*norm.cdf(d2_val)
+    return BS_call
 
 def put_value(S, K, r, T, sigma):
     d1_val = d1(S, K, r, T, sigma)
     d2_val = d2(S, K, r, T, sigma)
-    return K*np.exp(-r*T)*norm.cdf(-d2_val)-S*norm.cdf(-d1_val)
+    BS_put = K*np.exp(-r*T)*norm.cdf(-d2_val)-S*norm.cdf(-d1_val)
+    return BS_put
 
 def delta(option_type, S, K, r, T, sigma):
     if option_type == "call":
@@ -54,7 +56,7 @@ with st.sidebar:
     linkedin_url = "https://www.linkedin.com/in/arthur-villela"
     st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Arthur Villela`</a>', unsafe_allow_html=True)
 
-    cap = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
+    cp = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
     sp = st.sidebar.number_input("Strike (K)", value=70.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
     ty = st.sidebar.number_input("Years to Maturity (T)", value=1.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.4f")
     vol = st.sidebar.number_input("Volatility (σ)", value=0.30, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
