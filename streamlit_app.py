@@ -99,7 +99,7 @@ col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(5, 3))  # 4x4 figure size
+    plt.figure(figsize=(5, 3)) 
     if title == "Call":
         sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
     else:
@@ -108,7 +108,7 @@ def heat_map(col, row, title):
     plt.ylabel("Volatility", fontsize=5)
     plt.xticks(rotation=45, ha="right", fontsize=5)
     plt.yticks(rotation=0, fontsize=5)
-    plt.tight_layout(pad=0)  # Ensure a tight fit
+    plt.tight_layout(pad=0)
     st.pyplot(plt)
     plt.close(None)
 
