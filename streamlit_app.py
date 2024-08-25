@@ -2,7 +2,9 @@ import streamlit as st
 import numpy as np
 from scipy.stats import norm
 import seaborn as sn
+import plotly.graph_objs as go
 import matplotlib.pyplot as plt
+
 
 # d1 calculation
 def d1(S, K, r, T, sigma):
@@ -28,28 +30,27 @@ def put_value(S, K, r, T, sigma):
 
 # Greeks calculation
 def delta(option_type, S, K, r, T, sigma):
-    if option_type == "call":
+    if option_type == "Call":
         return norm.cdf(d1(S, K, r, T, sigma))
-    elif option_type == "put":
+    elif option_type == "Put":
         return norm.cdf(d1(S, K, r, T, sigma))-1
 
 def gamma(S, K, r, T, sigma):
     return norm.pdf(d1(S, K, r, T, sigma))/(S*sigma*np.sqrt(T))
 
 def theta(option_type, S, K, r, T, sigma):
-    if option_type == "call":
+    if option_type == "Call":
         return -S*norm.pdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)-r*K*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
-    elif option_type == "put":
+    elif option_type == "Put":
         return -S*norm.pdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)+r*K*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
-
 
 def vega(S, K, r, T, sigma):
     return S*np.sqrt(T)*norm.pdf(d1(S, K, r, T, sigma))
 
 def rho(option_type, S, K, r, T, sigma):
-    if option_type == "call":
+    if option_type == "Call":
         return K*T*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
-    elif option_type == "put":
+    elif option_type == "Put":
         return -K*T*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
 
 st.set_page_config(layout="wide")
@@ -150,16 +151,85 @@ col1, col2 = st.columns(2)
 # Displaying greeks
 with col1:
     st.header("Call")  
-    st.subheader(f"**Delta (∆):** :blue-background[{round(delta('call',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Delta (∆):** :blue-background[{round(delta('Call',s, k, rf, t, vol), 2)}]")
     st.subheader(f"**Gamma (Γ):** :blue-background[{round(gamma(s, k, rf, t, vol), 2)}]")
-    st.subheader(f"**Theta (Θ):** :blue-background[{round(theta('call',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Theta (Θ):** :blue-background[{round(theta('Call',s, k, rf, t, vol), 2)}]")
     st.subheader(f"**Vega (ν):** :blue-background[{round(vega(s, k, rf, t, vol), 2)}]")
-    st.subheader(f"**Rho (ρ):** :blue-background[{round(rho('call', s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Rho (ρ):** :blue-background[{round(rho('Call', s, k, rf, t, vol), 2)}]")
 
 with col2:
     st.header("Put")  
-    st.subheader(f"**Delta (∆):** :green-background[{round(delta('put',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Delta (∆):** :green-background[{round(delta('Put',s, k, rf, t, vol), 2)}]")
     st.subheader(f"**Gamma (Γ):** :green-background[{round(gamma(s, k, rf, t, vol), 2)}]")
-    st.subheader(f"**Theta (Θ):** :green-background[{round(theta('put',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Theta (Θ):** :green-background[{round(theta('Put',s, k, rf, t, vol), 2)}]")
     st.subheader(f"**Vega (ν):** :green-background[{round(vega(s, k, rf, t, vol), 2)}]")
-    st.subheader(f"**Rho (ρ):** :green-background[{round(rho('put', s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Rho (ρ):** :green-background[{round(rho('Put', s, k, rf, t, vol), 2)}]")
+
+st.title("Charts")
+selected_variable = st.selectbox("", ["Stock Price (S)", "Strike Price (K)", "Time to Maturity (T)", "Volatility (σ)", "Risk-Free Interest Rate (r)"])
+col1, col2 = st.columns(2)
+
+def plot_greeks(variable, values, S, K, T, r, sigma, option_type):
+
+    fig = go.Figure()
+
+    if variable == "Stock Price (S)":
+        delta_values = [delta(option_type, S, K, r, T, sigma) for S in values]
+        gamma_values = [gamma(S, K, r, T, sigma) for S in values]
+        theta_values = [theta(option_type, S, K, r, T, sigma) for S in values]
+        vega_values = [vega(S, K, r, T, sigma) for S in values]
+        rho_values = [rho(option_type, S, K, r, T, sigma) for S in values]
+    elif variable == "Strike Price (K)":
+        delta_values = [delta(option_type, S, K, r, T, sigma) for K in values]
+        gamma_values = [gamma(S, K, r, T, sigma) for K in values]
+        theta_values = [theta(option_type, S, K, r, T, sigma) for K in values]
+        vega_values = [vega(S, K, r, T, sigma) for K in values]
+        rho_values = [rho(option_type, S, K, r, T, sigma) for K in values]
+    elif variable == "Time to Maturity (T)":
+        delta_values = [delta(option_type, S, K, r, T, sigma) for T in values]
+        gamma_values = [gamma(S, K, r, T, sigma) for T in values]
+        theta_values = [theta(option_type, S, K, r, T, sigma) for T in values]
+        vega_values = [vega(S, K, r, T, sigma) for T in values]
+        rho_values = [rho(option_type, S, K, r, T, sigma) for T in values]
+    elif variable == "Risk-Free Interest Rate (r)":
+        delta_values = [delta(option_type, S, K, r, T, sigma) for r in values]
+        gamma_values = [gamma(S, K, r, T, sigma) for r in values]
+        theta_values = [theta(option_type, S, K, r, T, sigma) for r in values]
+        vega_values = [vega(S, K, r, T, sigma) for r in values]
+        rho_values = [rho(option_type, S, K, r, T, sigma) for r in values]
+    elif variable == "Volatility (σ)":
+        delta_values = [delta(option_type, S, K, r, T, sigma) for sigma in values]
+        gamma_values = [gamma(S, K, r, T, sigma) for sigma in values]
+        theta_values = [theta(option_type, S, K, r, T, sigma) for sigma in values]
+        vega_values = [vega(S, K, r, T, sigma) for sigma in values]
+        rho_values = [rho(option_type, S, K, r, T, sigma) for sigma in values]
+    
+    fig.add_trace(go.Scatter(x=values, y=delta_values, mode='lines', name=f'Delta'))
+    fig.add_trace(go.Scatter(x=values, y=gamma_values, mode='lines', name=f'Gamma'))
+    fig.add_trace(go.Scatter(x=values, y=theta_values, mode='lines', name=f'Theta'))
+    fig.add_trace(go.Scatter(x=values, y=vega_values, mode='lines', name=f'Vega'))
+    fig.add_trace(go.Scatter(x=values, y=rho_values, mode='lines', name=f'Rho'))
+
+    fig.update_layout(title=f'{option_type.capitalize()} Option Greeks x {variable.capitalize()}',
+                      xaxis_title=variable,
+                      yaxis_title='Greek Value')
+    return fig
+
+if selected_variable == "Stock Price (S)":
+    values = np.linspace(50, 150, 100)
+elif selected_variable == "Strike Price (K)":  
+    values = np.linspace(50, 150, 100)
+elif selected_variable == "Time to Maturity (T)":
+    values = np.linspace(0.1, 2, 100)
+elif selected_variable == "Risk-Free Interest Rate (r)":
+    values = np.linspace(0.0, 0.1, 100)
+elif selected_variable == "Volatility (σ)":
+    values = np.linspace(0.1, 0.5, 100)
+
+with col1:
+    fig_greeks = plot_greeks(selected_variable, values, s, k, t, rf, vol, "Call")
+    st.plotly_chart(fig_greeks)
+
+with col2:
+    fig_greeks = plot_greeks(selected_variable, values, s, k, t, rf, vol, "Put")
+    st.plotly_chart(fig_greeks)
