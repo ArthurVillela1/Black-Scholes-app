@@ -94,28 +94,35 @@ def fair_values(S, K, r, T, sigma):
 
 fair_values(s, k, rf, t, vol)
 
-st.title("Options Heatmap")
+st.title("P&L Heatmap")
 col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(5, 5))  # 4x4 figure size
     if title == "Call":
-        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="crest", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
+        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 6})  # Smaller annotation size, bold for clarity
     else:
-        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="crest", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink":0.8})
-    plt.xlabel("Spot Price")
-    plt.ylabel("Volatility")
-
-    plt.tight_layout(pad=0)
-
+        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 6})  # Smaller annotation size, bold for clarity
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.xticks(rotation=45, ha="right", fontsize=8)
+    plt.yticks(rotation=0, fontsize=8)
+    plt.tight_layout(pad=0)  # Ensure a tight fit
     st.pyplot(plt)
     plt.close(None)
 
 st.sidebar.write("--------------------------")
 st.sidebar.subheader("Heatmap Parameters")
 
+with st.sidebar:
+    add_radio = st.radio(
+        "Option type",
+        ("Call", "Put"),
+    )
+
 # Getting the heatmap parameters from the sidebar
+purchase_price = round(st.sidebar.number_input("Purchase Price", value=1.0, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f"), 2)
 min_vol = st.sidebar.slider("Min Volatility", 0.01, 1.00, vol)
 max_vol = st.sidebar.slider("Max Volatility", 0.01, 1.00, vol*2)
 min_price = round(st.sidebar.number_input("Min Price", value=round(s*0.5, 2), step=0.01, min_value=0.0, max_value=9999.00, format="%.2f"), 2)
@@ -130,23 +137,18 @@ rows_print = [round(x, 2) for x in rows]
 columns_print = [round(x, 2) for x in columns]
 
 # Creating matrices for the heat maps
-data_call = [[call_value(S, k, rf, t, sigma) for S in columns] for sigma in rows]
-data_put = [[put_value(S, k, rf, t, sigma) for S in columns] for sigma in rows]
+data_call = [[call_value(S, k, rf, t, sigma)-purchase_price for S in columns] for sigma in rows]
+data_put = [[put_value(S, k, rf, t, sigma)- purchase_price for S in columns] for sigma in rows]
 
-# Heatmap output
-with col1:
-    st.header("Call")
+if add_radio == "Call":
     heat_map(columns_print, rows_print, "Call")
-
-with col2:
-    st.header("Put")
+else:
     heat_map(columns_print, rows_print, "Put")
 
 st.title("Greeks")
-
 col1, col2 = st.columns(2)
 
-# Plotting greeks
+# Displaying greeks
 with col1:
     st.header("Call")  
     st.subheader(f"**Delta (∆):** :blue-background[{round(delta('call',s, k, rf, t, vol), 3)}]")
