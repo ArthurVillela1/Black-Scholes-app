@@ -99,15 +99,15 @@ col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(5, 3)) 
+    plt.figure(figsize=(7, 7)) 
     if title == "Call":
-        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
+        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 9})  # Smaller annotation size, bold for clarity
     else:
-        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
-    plt.xlabel("Spot Price", fontsize=5)
-    plt.ylabel("Volatility", fontsize=5)
-    plt.xticks(rotation=45, ha="right", fontsize=5)
-    plt.yticks(rotation=0, fontsize=5)
+        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 9})  # Smaller annotation size, bold for clarity
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.xticks(rotation=45, ha="right", fontsize=8)
+    plt.yticks(rotation=0, fontsize=8)
     plt.tight_layout(pad=0)
     st.pyplot(plt)
     plt.close(None)
@@ -140,10 +140,11 @@ columns_print = [round(x, 2) for x in columns]
 data_call = [[call_value(S, k, rf, t, sigma)-purchase_price for S in columns] for sigma in rows]
 data_put = [[put_value(S, k, rf, t, sigma)- purchase_price for S in columns] for sigma in rows]
 
-if add_radio == "Call":
-    heat_map(columns_print, rows_print, "Call")
-else:
-    heat_map(columns_print, rows_print, "Put")
+with col1:
+    if add_radio == "Call":
+        heat_map(columns_print, rows_print, "Call")
+    else:
+        heat_map(columns_print, rows_print, "Put")
 
 st.title("Greeks")
 col1, col2 = st.columns(2)
