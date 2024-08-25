@@ -70,10 +70,10 @@ col1, col2 = st.columns(2)
 # Getting B&S inputs from the sidebars
 with st.sidebar:
     st.title("📈 Black-Scholes Model")
-    st.write("`Created by:`")
+    st.write("`Created by: Arthur Villela`")
     linkedin_url = "https://www.linkedin.com/in/arthur-villela"
-    st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Arthur Villela`</a>', unsafe_allow_html=True)
-
+    github_url ="https://github.com/ArthurVillela1"
+    st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"><a href="{github_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"></a>', unsafe_allow_html=True)
     st.sidebar.write("--------------------------")
 
     s = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
@@ -210,7 +210,7 @@ def plot_greeks(variable, values, S, K, T, r, sigma, option_type):
     fig.add_trace(go.Scatter(x=values, y=vega_values, mode='lines', name=f'Vega'))
     fig.add_trace(go.Scatter(x=values, y=rho_values, mode='lines', name=f'Rho'))
 
-    fig.update_layout(title=f'{option_type.capitalize()} Option Greeks x {variable.capitalize()}',
+    fig.update_layout(title=f'{option_type.capitalize()} Option Greeks x {variable}',
                       xaxis_title=variable,
                       yaxis_title='Greek Value')
     return fig
