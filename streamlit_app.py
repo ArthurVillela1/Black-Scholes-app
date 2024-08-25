@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # d1 calculation
 def d1(S, K, r, T, sigma):
-    return (np.log(S/K)+T*(r+np.pow(sigma, 2)/2))/(sigma*np.sqrt(T))
+    return (np.log(S/K)+T*(r+(sigma**2)/2))/(sigma*np.sqrt(T))
 
 # d2 calculation
 def d2(S, K, r, T, sigma):
@@ -34,18 +34,17 @@ def delta(option_type, S, K, r, T, sigma):
         return norm.cdf(d1(S, K, r, T, sigma))-1
 
 def gamma(S, K, r, T, sigma):
-    return norm.cdf(d1(S, K, r, T, sigma))/S*sigma*np.sqrt(T)
-
+    return norm.pdf(d1(S, K, r, T, sigma))/(S*sigma*np.sqrt(T))
 
 def theta(option_type, S, K, r, T, sigma):
     if option_type == "call":
-        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)-r*K*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
+        return -S*norm.pdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)-r*K*np.exp(-r*T)*norm.cdf(d2(S, K, r, T, sigma))
     elif option_type == "put":
-        return -S*norm.cdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)+r*K*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
+        return -S*norm.pdf(d1(S, K, r, T, sigma))*sigma/2*np.sqrt(T)+r*K*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
 
 
 def vega(S, K, r, T, sigma):
-    return S*np.sqrt(T)*norm.cdf(d1(S, K, r, T, sigma))
+    return S*np.sqrt(T)*norm.pdf(d1(S, K, r, T, sigma))
 
 def rho(option_type, S, K, r, T, sigma):
     if option_type == "call":
@@ -99,15 +98,15 @@ col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(5, 5))  # 4x4 figure size
+    plt.figure(figsize=(5, 3))  # 4x4 figure size
     if title == "Call":
-        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 6})  # Smaller annotation size, bold for clarity
+        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
     else:
-        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 6})  # Smaller annotation size, bold for clarity
-    plt.xlabel("Spot Price", fontsize=8)
-    plt.ylabel("Volatility", fontsize=8)
-    plt.xticks(rotation=45, ha="right", fontsize=8)
-    plt.yticks(rotation=0, fontsize=8)
+        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
+    plt.xlabel("Spot Price", fontsize=5)
+    plt.ylabel("Volatility", fontsize=5)
+    plt.xticks(rotation=45, ha="right", fontsize=5)
+    plt.yticks(rotation=0, fontsize=5)
     plt.tight_layout(pad=0)  # Ensure a tight fit
     st.pyplot(plt)
     plt.close(None)
@@ -151,16 +150,16 @@ col1, col2 = st.columns(2)
 # Displaying greeks
 with col1:
     st.header("Call")  
-    st.subheader(f"**Delta (∆):** :blue-background[{round(delta('call',s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Gamma (Γ):** :blue-background[{round(gamma(s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Theta (Θ):** :blue-background[{round(theta('call',s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Vega (ν):** :blue-background[{round(vega(s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Rho (ρ):** :blue-background[{round(rho('call', s, k, rf, t, vol), 3)}]")
+    st.subheader(f"**Delta (∆):** :blue-background[{round(delta('call',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Gamma (Γ):** :blue-background[{round(gamma(s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Theta (Θ):** :blue-background[{round(theta('call',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Vega (ν):** :blue-background[{round(vega(s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Rho (ρ):** :blue-background[{round(rho('call', s, k, rf, t, vol), 2)}]")
 
 with col2:
     st.header("Put")  
-    st.subheader(f"**Delta (∆):** :green-background[{round(delta('put',s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Gamma (Γ):** :green-background[{round(gamma(s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Theta (Θ):** :green-background[{round(theta('put',s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Vega (ν):** :green-background[{round(vega(s, k, rf, t, vol), 3)}]")
-    st.subheader(f"**Rho (ρ):** :green-background[{round(rho('put', s, k, rf, t, vol), 3)}]")
+    st.subheader(f"**Delta (∆):** :green-background[{round(delta('put',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Gamma (Γ):** :green-background[{round(gamma(s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Theta (Θ):** :green-background[{round(theta('put',s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Vega (ν):** :green-background[{round(vega(s, k, rf, t, vol), 2)}]")
+    st.subheader(f"**Rho (ρ):** :green-background[{round(rho('put', s, k, rf, t, vol), 2)}]")
