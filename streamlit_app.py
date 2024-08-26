@@ -99,7 +99,7 @@ col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(8, 3)) 
+    plt.figure(figsize=(25, 3)) 
     if title == "Call":
         sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
     else:
