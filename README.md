@@ -9,8 +9,11 @@ The purpose of this web application is to price call and put options through the
 
 ## Demo
 ![](./images/1.png)
+
 ![](./images/2.png)
+
 ![](./images/3.png)
+
 ![](./images/4.png)
 
 ## Relevant Code
