@@ -3,6 +3,12 @@ The purpose of this web application is to price call and put options through the
 
 [Black-Scholes Option Pricing Web App](https://pricingoptions.streamlit.app/)
 
+## Features
+- Black-Scholes option pricing
+- P&L heatmap
+- Greeks calculation
+- Vizualisation of how greeks behave against each input of the Black-Scholes model
+
 ## Technologies Used
 - **Python**: Implement the logic for the pricing model, heatmap and greeks.
 - **Streamlit**: User interface
