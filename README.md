@@ -1,6 +1,8 @@
 # Black-Scholes Option Pricing App
 The purpose of this web application is to price call and put options through the Black-Scholes model. The P&L heatmap and greeks are also displayed so users can see how their positions are affected by the stock price, volatility, time and interest rates.
 
+[Link](https://pricingoptions.streamlit.app/)
+
 ## Technologies Used
 - **Python**: Implement the logic for the pricing model, heatmap and greeks.
 - **Streamlit**: User interface
