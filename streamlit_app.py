@@ -58,7 +58,7 @@ st.title("Black-Scholes Option Pricing")
 
 expander = st.expander("Learn more")
 expander.write('''
-    The Black & Scholes model is used for pricing options (either puts or calls)
+    The Black-Scholes model is used for pricing options (either puts or calls)
     through five inputs: underlying asset price (S), option strike price (K), time
     to maturity (T), standard deviation of the underlying asset (σ) and the risk-free interest rate(r).
     The formulas for this model are:
@@ -99,15 +99,15 @@ col1, col2 = st.columns(2)
 
 # Plotting heatmap
 def heat_map(col, row, title):
-    plt.figure(figsize=(7, 7)) 
+    plt.figure(figsize=(8, 3)) 
     if title == "Call":
-        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 9})  # Smaller annotation size, bold for clarity
+        sn.heatmap(data=data_call, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
     else:
-        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 9})  # Smaller annotation size, bold for clarity
-    plt.xlabel("Spot Price", fontsize=8)
-    plt.ylabel("Volatility", fontsize=8)
-    plt.xticks(rotation=45, ha="right", fontsize=8)
-    plt.yticks(rotation=0, fontsize=8)
+        sn.heatmap(data=data_put, annot=True, fmt=".2f", cmap="RdBu", xticklabels=col, yticklabels=row, square=True, cbar_kws={"shrink": 0.5}, annot_kws={"size": 5})  # Smaller annotation size, bold for clarity
+    plt.xlabel("Spot Price", fontsize=5)
+    plt.ylabel("Volatility", fontsize=5)
+    plt.xticks(rotation=45, ha="right", fontsize=5)
+    plt.yticks(rotation=0, fontsize=5)
     plt.tight_layout(pad=0)
     st.pyplot(plt)
     plt.close(None)
@@ -140,7 +140,7 @@ columns_print = [round(x, 2) for x in columns]
 data_call = [[call_value(S, k, rf, t, sigma)-purchase_price for S in columns] for sigma in rows]
 data_put = [[put_value(S, k, rf, t, sigma)- purchase_price for S in columns] for sigma in rows]
 
-with col1:
+with st.container():
     if add_radio == "Call":
         heat_map(columns_print, rows_print, "Call")
     else:
@@ -170,6 +170,7 @@ st.title("Charts")
 selected_variable = st.selectbox("", ["Stock Price (S)", "Strike Price (K)", "Time to Maturity (T)", "Volatility (σ)", "Risk-Free Interest Rate (r)"])
 col1, col2 = st.columns(2)
 
+# Plotting greeks
 def plot_greeks(variable, values, S, K, T, r, sigma, option_type):
 
     fig = go.Figure()
