@@ -68,5 +68,3 @@ def rho(option_type, S, K, r, T, sigma):
         return -K*T*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
 
 ```
-
-## Stretch Goals
