@@ -6,11 +6,11 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 
 
-# d1 calculation
+# Calculating d1
 def d1(S, K, r, T, sigma):
     return (np.log(S/K)+T*(r+(sigma**2)/2))/(sigma*np.sqrt(T))
 
-# d2 calculation
+# Calculating d2
 def d2(S, K, r, T, sigma):
     return d1(S, K, r, T, sigma) - sigma*np.sqrt(T)
 
