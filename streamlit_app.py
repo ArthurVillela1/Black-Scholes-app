@@ -166,7 +166,6 @@ with col2:
     st.subheader(f"**Vega (ν):** :green-background[{round(vega(s, k, rf, t, vol), 2)}]")
     st.subheader(f"**Rho (ρ):** :green-background[{round(rho('Put', s, k, rf, t, vol), 2)}]")
 
-st.title("Charts")
 selected_variable = st.selectbox("", ["Stock Price (S)", "Strike Price (K)", "Time to Maturity (T)", "Volatility (σ)", "Risk-Free Interest Rate (r)"])
 col1, col2 = st.columns(2)
 
