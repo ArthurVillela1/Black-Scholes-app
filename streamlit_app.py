@@ -5,6 +5,7 @@ import seaborn as sn
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 
+
 # Calculating d1
 def d1(S, K, r, T, sigma):
     return (np.log(S/K)+T*(r+(sigma**2)/2))/(sigma*np.sqrt(T))
@@ -74,10 +75,6 @@ with st.sidebar:
     github_url ="https://github.com/ArthurVillela1"
     st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"><a href="{github_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"></a>', unsafe_allow_html=True)
     st.sidebar.write("--------------------------")
-    option_type = st.sidebar.radio("Option Type", ("Vanilla", "Barrier"))
-    if option_type == "Barrier":
-        barrier_type = st.sidebar.radio("Barrier Type", ("Knock-In", "Knock-Out"))
-    st.sidebar.write("--------------------------")
 
     s = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
     k = st.sidebar.number_input("Strike (K)", value=70.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
@@ -120,7 +117,7 @@ st.sidebar.subheader("Heatmap Parameters")
 
 with st.sidebar:
     add_radio = st.radio(
-        "Option Class",
+        "Option type",
         ("Call", "Put"),
     )
 
