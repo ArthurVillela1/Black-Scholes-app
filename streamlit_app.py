@@ -74,10 +74,9 @@ with st.sidebar:
     github_url ="https://github.com/ArthurVillela1"
     st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"><a href="{github_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;"></a>', unsafe_allow_html=True)
     st.sidebar.write("--------------------------")
-    add_radio = st.radio(
-        "Option Type",
-        ("Vanilla", "Barrier"),
-    )
+    option_type = st.sidebar.radio("Option Type", ("Vanilla", "Barrier"))
+    if option_type == "Barrier":
+        barrier_type = st.sidebar.radio("Barrier Type", ("Knock-In", "Knock-Out"))
     st.sidebar.write("--------------------------")
 
     s = st.sidebar.number_input("Current Asset Price (S)", value=50.00, step=0.01, min_value=0.0, max_value=9999.00, format="%.2f")
