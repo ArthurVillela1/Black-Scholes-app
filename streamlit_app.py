@@ -53,7 +53,7 @@ def rho(option_type, S, K, r, T, sigma):
     elif option_type == "Put":
         return -K*T*np.exp(-r*T)*norm.cdf(-d2(S, K, r, T, sigma))
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 st.title("Black-Scholes Option Pricing")
 
 expander = st.expander("Learn more")
